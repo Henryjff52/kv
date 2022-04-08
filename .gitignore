@@ -11,3 +11,4 @@ cover.out
 test
 kv
 log.txt
+*.socket

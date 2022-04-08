@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"time"
 
@@ -41,22 +42,22 @@ func (KVStoreApplication) Info(req abcitypes.RequestInfo) abcitypes.ResponseInfo
 
 func (app *KVStoreApplication) DeliverTx(req abcitypes.RequestDeliverTx) abcitypes.ResponseDeliverTx {
 	fmt.Println("DeliverTx", req)
-	return abcitypes.ResponseDeliverTx{Code: 1}
+	// return abcitypes.ResponseDeliverTx{Code: 1}
 
-	// code := app.isValid(req.Tx)
-	// if code != 0 {
-	// 	return abcitypes.ResponseDeliverTx{Code: code}
-	// }
+	code := app.isValid(req.Tx)
+	if code != 0 {
+		return abcitypes.ResponseDeliverTx{Code: code}
+	}
 
-	// parts := bytes.Split(req.Tx, []byte("="))
-	// key, value := parts[0], parts[1]
-	// fmt.Println(string(key), string(value))
-	// err := app.currentBatch.Set(key, value)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	parts := bytes.Split(req.Tx, []byte("="))
+	key, value := parts[0], parts[1]
+	fmt.Println(string(key), string(value))
+	err := app.currentBatch.Set(key, value)
+	if err != nil {
+		panic(err)
+	}
 
-	// return abcitypes.ResponseDeliverTx{Code: 0}
+	return abcitypes.ResponseDeliverTx{Code: 0}
 }
 
 // func (KVStoreApplication) Commit() abcitypes.ResponseCommit {
